@@ -1,0 +1,25 @@
+services:
+  nginx:
+    build:
+      context: ./requirements/nginx
+      dockerfile: Dockerfile
+    container_name: nginx_service
+    ports:
+      - "443:443"
+    volumes:
+      - ~/certificates/server.crt:/etc/ssl/certs/server.crt:ro
+      - ~/certificates/server.key:/etc/ssl/private/server.key:ro
+    networks:
+      - app_network
+    restart: always
+    environment:
+      DOMAIN_NAME: ${DOMAIN_NAME}
+
+networks:
+  app_network:
+    driver: bridge
+secrets:
+  server_crt:
+    external: true
+  server_key:
+    external: true
