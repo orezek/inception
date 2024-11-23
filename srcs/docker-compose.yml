@@ -1,25 +1,93 @@
 services:
+  mariadb:
+    build:
+      context: ./requirements/mariadb
+    image: app_stack_mariadb:v1.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=/run/secrets/mysql_root_password
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=/run/secrets/mysql_user_password
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    secrets:
+      - mysql_root_password
+      - mysql_user_password
+    volumes:
+      - wp_database:/var/lib/mysql  # Use Docker-native volume
+    networks:
+      - docker-network
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  wordpress:
+    build:
+      context: ./requirements/wordpress
+    image: app_stack_wordpress:v1.0
+    environment:
+      - WORDPRESS_HOST=${WORDPRESS_HOST}
+      - WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME}
+      - WORDPRESS_ADMIN_USER=${WORDPRESS_ADMIN_USER}
+      - WORDPRESS_USER=${WORDPRESS_USER}
+    secrets:
+      - wp_admin_password
+      - wp_user_password
+    volumes:
+      - wp_data:/var/www/html  # Use Docker-native volume
+    networks:
+      - docker-network
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
   nginx:
     build:
       context: ./requirements/nginx
-      dockerfile: Dockerfile
-    container_name: nginx_service
+    image: app_stack_nginx:v1.0
     ports:
       - "443:443"
-    volumes:
-      - ~/certificates/server.crt:/etc/ssl/certs/server.crt:ro
-      - ~/certificates/server.key:/etc/ssl/private/server.key:ro
+    secrets:
+      - ssl_certificate_crt
+      - ssl_certificate_key
     networks:
-      - app_network
-    restart: always
-    environment:
-      DOMAIN_NAME: ${DOMAIN_NAME}
+      - docker-network
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+
+secrets:
+  mysql_root_password:
+    file: ../secrets/mysql_root_password.txt
+  mysql_user_password:
+    file: ../secrets/mysql_user_password.txt
+  wp_admin_password:
+    file: ../secrets/wp_admin_password.txt
+  wp_user_password:
+    file: ../secrets/wp_user_password.txt
+  ssl_certificate_crt:
+    file: ../secrets/certificates/server.crt
+  ssl_certificate_key:
+    file: ../secrets/certificates/server.key
 
 networks:
-  app_network:
-    driver: bridge
-secrets:
-  server_crt:
-    external: true
-  server_key:
-    external: true
+  docker-network:
+    driver: overlay  # Use overlay network for Docker Swarm
+
+volumes:
+  wp_database:  # Volume for MariaDB database
+    driver: local  # Docker-managed local volume
+
+  wp_data:  # Volume for WordPress files
+    driver: local  # Docker-managed local volume
+
+  # wp_database:
+  #   driver: local
+  #   driver_opts:
+  #     type: none
+  #     o: bind
+  #     device: ~/orezek/data/wp_database
