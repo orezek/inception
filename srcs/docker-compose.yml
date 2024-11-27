@@ -2,13 +2,14 @@ services:
   mariadb:
     build:
       context: ./requirements/mariadb
+    image: "mariadb:1.0"
     environment:
       - MYSQL_USER
       - MYSQL_PASSWORD
       - MYSQL_DATABASE
       - MYSQL_ROOT_PASSWORD
     networks:
-      - docker-network
+      - inception-network
     restart: on-failure
     volumes:
       - /Users/aldokezer/orezek/data/mysql_data:/var/lib/mysql
@@ -18,6 +19,7 @@ services:
   wordpress:
     build:
       context: ./requirements/wordpress
+    image: "wordpress:1.0"
     environment:
       - WORDPRESS_HOST
       - WORDPRESS_DB_NAME
@@ -26,7 +28,7 @@ services:
     env_file:
       - .env
     networks:
-      - docker-network
+      - inception-network
     restart: on-failure
     volumes:
       - /Users/aldokezer/orezek/data/wp_data:/var/www/html
@@ -36,11 +38,11 @@ services:
   nginx:
     build:
       context: ./requirements/nginx
+    image: "nginx:1.0"
     ports:
       - "443:443"
-      - "80:80"
     networks:
-      - docker-network
+      - inception-network
     restart: on-failure
     volumes:
       - /Users/aldokezer/orezek/data/wp_data:/var/www/html
@@ -48,7 +50,7 @@ services:
       - /Users/aldokezer/orezek/data/ssl:/etc/ssl/private
 
 networks:
-  docker-network:
+  inception-network:
     driver: bridge
 
 

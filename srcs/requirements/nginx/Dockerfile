@@ -16,7 +16,6 @@ COPY conf/nginx.conf /etc/nginx/nginx.conf
 
 # Expose port 443 for HTTPS traffic - it does nothing
 EXPOSE 443
-EXPOSE 80
 
 # Entrypoint to run NGINX in the foreground
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
