@@ -62,7 +62,7 @@ echo "Installing basic Wordpress blog"
 if ! wp core is-installed --path=/var/www/html --allow-root; then
     echo "Installing WordPress..."
     wp core install --url="http://localhost" \
-        --title="WordPress Site" \
+        --title="${WORDPRESS_SITE_TITLE}" \
         --admin_user="${ADMIN_USER}" \
         --admin_password="${ADMIN_PASSWORD}" \
         --admin_email="${ADMIN_EMAIL}" \
