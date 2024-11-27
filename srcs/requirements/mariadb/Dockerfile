@@ -19,11 +19,11 @@ COPY conf/my.cnf /etc/my.cnf
 EXPOSE 3306
 
 # Copy the entrypoint script
-COPY conf/docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+COPY conf/mariadb-setup.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/mariadb-setup.sh
 
 # Set entrypoint
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["mariadb-setup.sh"]
 
 # Default command to run
 CMD ["mysqld"]
