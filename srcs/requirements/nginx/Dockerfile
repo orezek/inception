@@ -1,10 +1,6 @@
 # Base image: Debian Bullseye Slim
 FROM debian:bullseye-slim
 
-# Metadata for the image
-LABEL maintainer="orezek@42.fr" \
-      description="Custom NGINX image with TLSv1.2 and TLSv1.3 support on Debian Bullseye"
-
 # Update and install NGINX and required tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nginx \
@@ -15,11 +11,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Create required directories for TLS certificates
 RUN mkdir -p /etc/ssl/certs /etc/ssl/private
 
-# Copy the custom NGINX configuration
+# Copy the custom NGINX configuration its default location and override the default config
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 
-# Expose port 443 for HTTPS traffic
+# Expose port 443 for HTTPS traffic - it does nothing
 EXPOSE 443
+EXPOSE 80
 
 # Entrypoint to run NGINX in the foreground
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

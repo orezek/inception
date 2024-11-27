@@ -1,22 +1,29 @@
-# Base image: Alpine (penultimate stable version)
-FROM mariadb:10.6
+FROM alpine:3.17
 
-# Metadata
-LABEL maintainer="orezek@42.fr" \
-      description="MariaDB container for WordPress"
+LABEL maintainer="your_email@example.com" \
+      description="Custom MariaDB container for WordPress"
 
-# Install MariaDB
-#RUN apk update && apk add --no-cache \
-#    mariadb mariadb-client bash && \
-#    mkdir -p /var/lib/mysql /var/run/mysqld /var/log/mysql && \
-#    chown -R mysql:mysql /var/lib/mysql /var/run/mysqld /var/log/mysql
+# Update package list and install MariaDB with verbose output
+RUN set -x && apk update && apk add --no-cache mariadb mariadb-client
 
+# Create necessary directories and set permissions
+RUN set -x
+RUN mkdir -p /run/mysqld
+RUN mkdir -p /var/log/mysql
+RUN chown -R mysql:mysql /run/mysqld /var/log/mysql
 
 # Copy custom MariaDB configuration
-COPY ./conf/my.cnf /etc/my.cnf
+COPY conf/my.cnf /etc/my.cnf
 
-# Expose port for MySQL
+# Expose port for MariaDB
 EXPOSE 3306
 
-# Entry point to run MariaDB
-#ENTRYPOINT ["mysqld"]
+# Copy the entrypoint script
+COPY conf/docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Set entrypoint
+ENTRYPOINT ["docker-entrypoint.sh"]
+
+# Default command to run
+CMD ["mysqld"]
