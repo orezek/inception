@@ -4,13 +4,18 @@
 set -e
 
 # Define variables from environment variables
-DB_HOST=${WORDPRESS_HOST:-"mariadb"}
-DB_NAME=${WORDPRESS_DB_NAME:-"wordpress"}
-DB_USER=${WORDPRESS_USER:-"wp_user"}
-DB_PASSWORD=${WORDPRESS_PASSWORD:-"wp_password"}
-ADMIN_USER=${WORDPRESS_ADMIN_USER:-"admin"}
-ADMIN_PASSWORD=${WORDPRESS_ADMIN_PASSWORD:-"admin_password"}
-ADMIN_EMAIL=${WORDPRESS_ADMIN_EMAIL:-"admin@example.com"}
+DB_HOST=${WORDPRESS_HOST}
+DB_NAME=${WORDPRESS_DB_NAME}
+DB_USER=${WORDPRESS_USER}
+DB_PASSWORD=${WORDPRESS_PASSWORD}
+ADMIN_USER=${WORDPRESS_ADMIN_USER}
+ADMIN_PASSWORD=${WORDPRESS_ADMIN_PASSWORD}
+ADMIN_EMAIL=${WORDPRESS_ADMIN_EMAIL}
+
+echo "Printing credentials"
+echo "${ADMIN_USER}"
+echo "${ADMIN_PASSWORD}"
+echo "${ADMIN_EMAIL}"
 
 # Wait for the database to be ready
 echo "Waiting for the database to be ready..."
