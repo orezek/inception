@@ -4,18 +4,32 @@
 set -e
 
 # Define variables from environment variables
-DB_HOST=${WORDPRESS_HOST}
+DB_HOST=${WORDPRESS_DB_HOST}
 DB_NAME=${WORDPRESS_DB_NAME}
-DB_USER=${WORDPRESS_USER}
-DB_PASSWORD=${WORDPRESS_PASSWORD}
+DB_USER=${WORDPRESS_DB_USER}
+DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
+
 ADMIN_USER=${WORDPRESS_ADMIN_USER}
 ADMIN_PASSWORD=${WORDPRESS_ADMIN_PASSWORD}
 ADMIN_EMAIL=${WORDPRESS_ADMIN_EMAIL}
+
+SECOND_USER=${WORDPRESS_EDITOR_USER}
+SECOND_USER_EMAIL=${WORDPRESS_EDITOR_EMAIL}
+SECOND_USER_PASSWORD=${WORDPRESS_EDITOR_PASSWORD}
 
 echo "Printing credentials"
 echo "${ADMIN_USER}"
 echo "${ADMIN_PASSWORD}"
 echo "${ADMIN_EMAIL}"
+echo "DB Credentials"
+echo "${DB_USER}"
+echo "${DB_PASSWORD}"
+echo "${DB_HOST}"
+echo "Second User"
+echo "${SECOND_USER}"
+echo "${SECOND_USER_EMAIL}"
+echo "${SECOND_USER_PASSWORD}"
+echo "End -----------------"
 
 # Wait for the database to be ready
 echo "Waiting for the database to be ready..."
@@ -63,7 +77,7 @@ fi
 echo "WP files verified."
 
 # Run WordPress installation
-echo "Installing basic Wordpress blog"
+echo "Installing basic Wordpress site"
 if ! wp core is-installed --path=/var/www/html --allow-root; then
     echo "Installing WordPress..."
     wp core install --url="http://localhost" \
@@ -73,7 +87,16 @@ if ! wp core is-installed --path=/var/www/html --allow-root; then
         --admin_email="${ADMIN_EMAIL}" \
         --path=/var/www/html \
         --allow-root
+    # Create second user
+    echo "Creating the second user"
+    wp user create "${SECOND_USER}" "${SECOND_USER_EMAIL}" \
+        --role=editor \
+        --user_pass="${SECOND_USER_PASSWORD}" \
+        --path=/var/www/html \
+        --allow-root
 fi
+
+
 echo "Wordpress installation installed"
 
 # Ensure permissions
