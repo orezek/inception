@@ -22,22 +22,22 @@ SECOND_USER_FIRST_NAME=${WORDPRESS_EDITOR_FIRST_NAME}
 SECOND_USER_LAST_NAME=${WORDPRESS_EDITOR_LAST_NAME}
 SECOND_USER_PASSWORD=$(cat /run/secrets/wp_editor_password)
 
-echo "Printing credentials"
-echo "DB Credentials"
-echo "${DB_USER}"
-echo "${DB_PASSWORD}"
-echo "${DB_HOST}"
-echo "Admin Credentials"
-echo "${ADMIN_USER}"
-echo "${ADMIN_PASSWORD}"
-echo "${ADMIN_EMAIL}"
-echo "Second User"
-echo "${SECOND_USER}"
-echo "${SECOND_USER_EMAIL}"
-echo "${SECOND_USER_FIRST_NAME}"
-echo "${SECOND_USER_LAST_NAME}"
-echo "${SECOND_USER_PASSWORD}"
-echo "End -----------------"
+# echo "Printing credentials"
+# echo "DB Credentials"
+# echo "${DB_USER}"
+# echo "${DB_PASSWORD}"
+# echo "${DB_HOST}"
+# echo "Admin Credentials"
+# echo "${ADMIN_USER}"
+# echo "${ADMIN_PASSWORD}"
+# echo "${ADMIN_EMAIL}"
+# echo "Second User"
+# echo "${SECOND_USER}"
+# echo "${SECOND_USER_EMAIL}"
+# echo "${SECOND_USER_FIRST_NAME}"
+# echo "${SECOND_USER_LAST_NAME}"
+# echo "${SECOND_USER_PASSWORD}"
+# echo "End -----------------"
 
 # Wait for the database to be ready
 echo "Waiting for the database to be ready..."
@@ -113,6 +113,22 @@ if ! wp core is-installed --path=/var/www/html --allow-root; then
         --last_name="${SECOND_USER_LAST_NAME}" \
         --path=/var/www/html \
         --allow-root
+fi
+
+# Execute the sample_page.sh
+if [ -f /usr/local/bin/sample_page.sh ]; then
+    echo "Executing sample_page.sh..."
+    bash /usr/local/bin/sample_page.sh
+else
+    echo "sample_page.sh not found. Skipping..."
+fi
+
+# Execute the sample post.sh
+if [ -f /usr/local/bin/sample_post.sh ]; then
+    echo "Executing sample_post.sh..."
+    bash /usr/local/bin/sample_post.sh
+else
+    echo "sample_post.sh not found. Skipping..."
 fi
 
 

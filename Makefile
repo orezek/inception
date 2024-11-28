@@ -5,7 +5,7 @@ SRC_DIR = ./srcs
 STACK_NAME = app_stack
 VERSION = v1.0
 
-USER = orezek
+USER_NAME = orezek
 DATA_DIR = data
 MYSQL_DATA = mysql_data
 WP_DATA = wp_data
@@ -14,14 +14,14 @@ WP_DATA = wp_data
 all: build up
 
 build:
-	@mkdir -p ~/USER/DATA_DIR/MYSQL_DATA
-	@mkdir -p ~/USER/DATA_DIR/WP_DATA
+	@mkdir -p ~/USER_NAME/DATA_DIR/MYSQL_DATA
+	@mkdir -p ~/USER_NAME/DATA_DIR/WP_DATA
 	@echo "Building Docker images..."
 	$(DOCKER_COMPOSE) -f $(SRC_DIR)/docker-compose.yml --env-file srcs/.env build
 
 
 up:
-	@echo "Stack is up and running in Swarm mode."
+	@echo "Starting containers up"
 	$(DOCKER_COMPOSE) -f $(SRC_DIR)/docker-compose.yml --env-file srcs/.env up
 
 down:

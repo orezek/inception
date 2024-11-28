@@ -37,6 +37,12 @@ COPY conf/php-fpm.conf /etc/php/7.4/fpm/php-fpm.conf
 # Add WordPress setup script
 COPY conf/setup-wordpress.sh /usr/local/bin/setup-wordpress.sh
 RUN chmod +x /usr/local/bin/setup-wordpress.sh
+#Add WordPres sample page setup
+COPY tools/sample_page.sh /usr/local/bin/sample_page.sh
+RUN chmod +x /usr/local/bin/sample_page.sh
+#Add WordPres samle post setup
+COPY tools/sample_post.sh /usr/local/bin/sample_post.sh
+RUN chmod +x /usr/local/bin/sample_post.sh
 
 # Expose port for PHP-FPM
 EXPOSE 9000
