@@ -31,9 +31,9 @@ fclean: clean
 	@docker system prune --all --force --volumes	# remove all (also used) images
 	@docker network prune --force
 	@docker volume prune --force
-	@sudo rm -rf ~/data/mysql_data/*
-	@sudo rm -rf ~/data/wp_data/*
-	
+	@sudo rm -rf ~/orezek/data/mysql_data/*
+	@sudo rm -rf ~/orezek/data/wp_data/*
+
 re: clean all
 
 # For validating docker compose yaml file
