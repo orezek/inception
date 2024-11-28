@@ -6,38 +6,38 @@ STACK_NAME = app_stack
 VERSION = v1.0
 
 # Targets
-all: build deploy
+all: build up
 
 build:
 	@echo "Building Docker images..."
-	$(DOCKER_COMPOSE) -f $(SRC_DIR)/docker-compose.yml build
-	@echo "Tagging Docker images with version: $(VERSION)"
+	$(DOCKER_COMPOSE) -f $(SRC_DIR)/docker-compose.yml --env-file srcs/.env build
 
-deploy: init-swarm
-	@echo "Deploying stack to Docker Swarm..."
-	$(DOCKER_STACK) deploy -c $(SRC_DIR)/docker-compose.yml $(STACK_NAME)
 
-init-swarm:
-	@echo "Initializing Docker Swarm (if not already initialized)..."
-	@if ! docker info | grep -q "Swarm: active"; then \
-		docker swarm init; \
-	fi
-
-up: deploy
+up:
 	@echo "Stack is up and running in Swarm mode."
+	$(DOCKER_COMPOSE) -f $(SRC_DIR)/docker-compose.yml --env-file srcs/.env up
 
 down:
-	@echo "Removing stack from Docker Swarm..."
-	$(DOCKER_STACK) rm $(STACK_NAME)
+	@echo "Stoping and removing containers..."
+	$(DOCKER_COMPOSE) -f $(SRC_DIR)/docker-compose.yml down
 
 clean: down
 	@echo "Cleaning up dangling resources..."
 	docker system prune -af --volumes
 
+fclean: clean
+	@echo "Cleaning up all resources"
+	@CONTAINERS=$$(docker ps -qa); if [ -n "$$CONTAINERS" ]; then docker stop $$CONTAINERS; fi
+	@docker system prune --all --force --volumes	# remove all (also used) images
+	@docker network prune --force
+	@docker volume prune --force
+	@sudo rm -rf ~/data/mysql_data/*
+	@sudo rm -rf ~/data/wp_data/*
+	
 re: clean all
 
 # For validating docker compose yaml file
-validate: init-swarm
+validate:
 	@echo "Validating the docker-compose.yml configuration..."
 	$(DOCKER_COMPOSE) -f $(SRC_DIR)/docker-compose.yml config
 

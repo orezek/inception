@@ -54,24 +54,17 @@ networks:
     driver: bridge
 
 
-secrets:
-# Mariadb
-  mysql_root_password:
-    file: ../secrets/mysql_root_password.txt
-  mysql_user_password:
-    file: ../secrets/mysql_user_password.txt
-# Wordpress application
-  wp_admin_password:
-    file: ../secrets/wp_admin_password.txt
-# WP database password - from wordpress app to wordpress db in mariadb
-  wp_db_password:
-    file: ../secrets/wp_db_password.txt
-# Second WP user password (after admin)
-  wp_editor_password:
-    file: ../secrets/wp_editor_password.txt
-# Certificates
-  ssl_certificate_crt:
-    file: ../secrets/certificates/server.crt
-  ssl_certificate_key:
-    file: ../secrets/certificates/server.key
+# secrets:
+#   mysql_root_password:
+#     file: ../secrets/mysql_root_password.txt
+#   mysql_user_password:
+#     file: ../secrets/mysql_user_password.txt
+#   wp_admin_password:
+#     file: ../secrets/wp_admin_password.txt
+#   wp_user_password:
+#     file: ../secrets/wp_user_password.txt
+#   ssl_certificate_crt:
+#     file: ../secrets/certificates/server.crt
+#   ssl_certificate_key:
+#     file: ../secrets/certificates/server.key
 
