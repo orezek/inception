@@ -13,7 +13,7 @@ services:
       - inception-network
     restart: on-failure
     volumes:
-      - /Users/aldokezer/orezek/data/mysql_data:/var/lib/mysql
+      - ~/orezek/data/mysql_data:/var/lib/mysql
     ports:
       - "3306:3306"
   wordpress:
@@ -38,7 +38,7 @@ services:
       - inception-network
     restart: on-failure
     volumes:
-      - /Users/aldokezer/orezek/data/wp_data:/var/www/html
+      - ~/orezek/data/wp_data:/var/www/html
     ports:
       - "9000:9000"
   nginx:
@@ -51,9 +51,9 @@ services:
       - inception-network
     restart: on-failure
     volumes:
-      - /Users/aldokezer/orezek/data/wp_data:/var/www/html
-      - /Users/aldokezer/orezek/data/ssl:/etc/ssl/certs
-      - /Users/aldokezer/orezek/data/ssl:/etc/ssl/private
+      - ~/orezek/data/wp_data:/var/www/html
+      - ../secrets/certificates:/etc/ssl/certs
+      - ../secrets/certificates:/etc/ssl/private
 
 networks:
   inception-network:
