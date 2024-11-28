@@ -12,9 +12,14 @@ DB_PASSWORD=$(cat /run/secrets/mysql_user_password)
 ADMIN_USER=${WORDPRESS_ADMIN_USER}
 ADMIN_PASSWORD=$(cat /run/secrets/wp_admin_password)
 ADMIN_EMAIL=${WORDPRESS_ADMIN_EMAIL}
+ADMIN_FIRST_NAME=${WORDPRESS_ADMIN_FIRST_NAME}
+ADMIN_LAST_NAME=${WORDPRESS_ADMIN_LAST_NAME}
+
 
 SECOND_USER=${WORDPRESS_EDITOR_USER}
 SECOND_USER_EMAIL=${WORDPRESS_EDITOR_EMAIL}
+SECOND_USER_FIRST_NAME=${WORDPRESS_EDITOR_FIRST_NAME}
+SECOND_USER_LAST_NAME=${WORDPRESS_EDITOR_LAST_NAME}
 SECOND_USER_PASSWORD=$(cat /run/secrets/wp_editor_password)
 
 echo "Printing credentials"
@@ -29,6 +34,8 @@ echo "${ADMIN_EMAIL}"
 echo "Second User"
 echo "${SECOND_USER}"
 echo "${SECOND_USER_EMAIL}"
+echo "${SECOND_USER_FIRST_NAME}"
+echo "${SECOND_USER_LAST_NAME}"
 echo "${SECOND_USER_PASSWORD}"
 echo "End -----------------"
 
@@ -88,11 +95,22 @@ if ! wp core is-installed --path=/var/www/html --allow-root; then
         --admin_email="${ADMIN_EMAIL}" \
         --path=/var/www/html \
         --allow-root
+
+    # Set admin first and last name
+    echo "Updating admin first and last name"
+    wp user update "${ADMIN_USER}" \
+        --first_name="${ADMIN_FIRST_NAME}" \
+        --last_name="${ADMIN_LAST_NAME}" \
+        --path=/var/www/html \
+        --allow-root
+
     # Create second user
     echo "Creating the second user"
     wp user create "${SECOND_USER}" "${SECOND_USER_EMAIL}" \
         --role=editor \
         --user_pass="${SECOND_USER_PASSWORD}" \
+        --first_name="${SECOND_USER_FIRST_NAME}" \
+        --last_name="${SECOND_USER_LAST_NAME}" \
         --path=/var/www/html \
         --allow-root
 fi
