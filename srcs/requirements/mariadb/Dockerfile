@@ -1,4 +1,4 @@
-FROM alpine:3.17
+FROM alpine:3.19
 
 LABEL maintainer="your_email@example.com" \
       description="Custom MariaDB container for WordPress"

@@ -14,8 +14,6 @@ services:
     restart: on-failure
     volumes:
       - ~/orezek/data/mysql_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
   wordpress:
     build:
       context: ./requirements/wordpress
@@ -45,8 +43,6 @@ services:
     restart: on-failure
     volumes:
       - ~/orezek/data/wp_data:/var/www/html
-    ports:
-      - "9000:9000"
   nginx:
     build:
       context: ./requirements/nginx
