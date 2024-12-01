@@ -14,8 +14,8 @@ WP_DATA = wp_data
 all: build up
 
 build:
-	@mkdir -p ~/USER_NAME/DATA_DIR/MYSQL_DATA
-	@mkdir -p ~/USER_NAME/DATA_DIR/WP_DATA
+	@mkdir -p ~/$(USER_NAME)/$(DATA_DIR)/$(MYSQL_DATA)
+	@mkdir -p ~/$(USER_NAME)/$(DATA_DIR)/$(WP_DATA)
 	@echo "Building Docker images..."
 	$(DOCKER_COMPOSE) -f $(SRC_DIR)/docker-compose.yml --env-file srcs/.env build
 
